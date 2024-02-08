@@ -21,7 +21,7 @@ public class FilmsManagerTests {
     private Film newDefaultFilm() {
         Film film = new Film();
         film.setName("Film Name");
-        film.setReleaseDate( LocalDate.of(2001,1,1) );
+        film.setReleaseDate(LocalDate.of(2001, 1, 1));
         film.setDuration(120);
         return film;
     }
@@ -31,7 +31,7 @@ public class FilmsManagerTests {
         assertEquals(oldFilm.getName(), newFilm.getName());
         assertEquals(
                 (oldFilm.getDescription() != null) ? oldFilm.getDescription() : "",
-                (newFilm.getDescription() != null) ? newFilm.getDescription() : "" );
+                (newFilm.getDescription() != null) ? newFilm.getDescription() : "");
         assertEquals(oldFilm.getReleaseDate(), newFilm.getReleaseDate());
         assertEquals(oldFilm.getDuration(), newFilm.getDuration());
     }
@@ -56,7 +56,7 @@ public class FilmsManagerTests {
     public void updFilm_updList() {
         Long filmId;
         try {
-            filmId = filmsManager.addFilm( newDefaultFilm() ).getId();
+            filmId = filmsManager.addFilm(newDefaultFilm()).getId();
         } catch (ValidationException e) {
             throw new RuntimeException("Ошибка при изменении фильма: " + e.getMessage());
         }
@@ -66,7 +66,7 @@ public class FilmsManagerTests {
         film.setName("Просто хороший фильм");
         film.setDescription("Описание к хорошему фильму");
         film.setDuration(100);
-        film.setReleaseDate(LocalDate.of(2024,1,1));
+        film.setReleaseDate(LocalDate.of(2024, 1, 1));
 
         Film updFilm;
         try {
@@ -97,7 +97,7 @@ public class FilmsManagerTests {
     public void validateFilm_throw_badDescription() {
         Film film = newDefaultFilm();
 
-        film.setDescription( "*".repeat(201) );
+        film.setDescription("*".repeat(201));
         assertThrows(ValidationException.class, film::validate);
     }
 
@@ -114,7 +114,7 @@ public class FilmsManagerTests {
         film.setDescription("*");
         assertDoesNotThrow(film::validate);
 
-        film.setDescription( "*".repeat(200) );
+        film.setDescription("*".repeat(200));
         assertDoesNotThrow(film::validate);
     }
 
@@ -126,14 +126,15 @@ public class FilmsManagerTests {
         film.setReleaseDate(null);
         assertThrows(ValidationException.class, film::validate);
 
-        film.setReleaseDate( LocalDate.of(1895, 12, 27) );
+        film.setReleaseDate(LocalDate.of(1895, 12, 27));
         assertThrows(ValidationException.class, film::validate);
     }
 
-    @Test void validateFilm_rightReleaseDate() {
+    @Test
+    void validateFilm_rightReleaseDate() {
         Film film = newDefaultFilm();
 
-        film.setReleaseDate( LocalDate.of(1895, 12, 28) );
+        film.setReleaseDate(LocalDate.of(1895, 12, 28));
         assertDoesNotThrow(film::validate);
     }
 

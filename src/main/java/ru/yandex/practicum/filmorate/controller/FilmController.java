@@ -29,7 +29,7 @@ public class FilmController {
 
     // Добавление нового фильма
     @PostMapping
-    public Film addFilm(@RequestBody Film film)  {
+    public Film addFilm(@RequestBody Film film) {
         try {
             log.debug("Запрос на добавление нового фильма: {}", film);
             return films.addFilm(film);

@@ -51,7 +51,7 @@ public class UsersManagersTest {
         }
         checkEqualsUsers(user, newUser);
 
-        User savedUser = userManager.getUser( newUser.getId() );
+        User savedUser = userManager.getUser(newUser.getId());
         checkEqualsUsers(user, savedUser);
     }
 
@@ -59,7 +59,7 @@ public class UsersManagersTest {
     public void updUser_updList() {
         Long userId;
         try {
-            userId = userManager.addUser( newDefaultUser() ).getId();
+            userId = userManager.addUser(newDefaultUser()).getId();
         } catch (ValidationException e) {
             throw new RuntimeException("Ошибка при изменении пользователя: " + e.getMessage());
         }
