@@ -22,7 +22,6 @@ public class User {
     - дата рождения не может быть в будущем.
     */
     public void validate() throws ValidationException {
-        // ToDo: переделать на regexpr
         if ((email == null) || email.isBlank() || !email.contains("@")) {
             throw new ValidationException("Некорректный адрес электронной почты");
         }

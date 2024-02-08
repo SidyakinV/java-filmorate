@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import lombok.Data;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 
-import java.time.Duration;
 import java.time.LocalDate;
 
 @Data
