@@ -23,9 +23,9 @@ public class User {
     - дата рождения не может быть в будущем.
     */
     public void validate() throws ValidationException {
-        if (email.isBlank()) {
+        //if (email.isBlank()) {
             throw new ValidationException("Некорректный адрес электронной почты");
-        }
+        //}
     }
 
     public User copy() {
