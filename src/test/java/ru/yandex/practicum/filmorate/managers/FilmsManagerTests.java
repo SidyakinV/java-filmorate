@@ -23,7 +23,7 @@ public class FilmsManagerTests {
         Film film = new Film();
         film.setName("Film Name");
         film.setReleaseDate( LocalDate.of(2001,1,1) );
-        film.setDuration( Duration.ofMinutes(120) );
+        film.setDuration(120);
         return film;
     }
 
@@ -66,7 +66,7 @@ public class FilmsManagerTests {
         film.setId(filmId);
         film.setName("Просто хороший фильм");
         film.setDescription("Описание к хорошему фильму");
-        film.setDuration(Duration.ofMinutes(100));
+        film.setDuration(100);
         film.setReleaseDate(LocalDate.of(2024,1,1));
 
         Film updFilm;
@@ -146,10 +146,10 @@ public class FilmsManagerTests {
         film.setDuration(null);
         assertThrows(ValidationException.class, film::validate);
 
-        film.setDuration( Duration.ofMinutes(-1) );
+        film.setDuration(-1);
         assertThrows(ValidationException.class, film::validate);
 
-        film.setDuration( Duration.ofMinutes(0) );
+        film.setDuration(0);
         assertThrows(ValidationException.class, film::validate);
     }
 
@@ -157,7 +157,7 @@ public class FilmsManagerTests {
     public void validateFilm_rightDuration() {
         Film film = newDefaultFilm();
 
-        film.setDuration( Duration.ofMinutes(1) );
+        film.setDuration(1);
         assertDoesNotThrow(film::validate);
     }
 
