@@ -29,7 +29,7 @@ public class Film {
 
     public Film copy() {
         Gson gson = new Gson();
-        return gson.fromJson( gson.toJson(this), Film.class );
+        return gson.fromJson(gson.toJson(this), Film.class);
     }
 
 }
