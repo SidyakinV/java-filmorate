@@ -15,15 +15,7 @@ public class User {
     private String name;
     private LocalDate birthday;
 
-    /*
-    Валидация:
-    - электронная почта не может быть пустой и должна содержать символ @;
-    - логин не может быть пустым и содержать пробелы;
-    - имя для отображения может быть пустым — в таком случае будет использован логин;
-    - дата рождения не может быть в будущем.
-    */
-    public void validate() throws ValidationException {
-            throw new ValidationException("Некорректный адрес электронной почты");
+    public void validate() {
     }
 
     public User copy() {
