@@ -22,16 +22,16 @@ public class Film {
     - продолжительность фильма должна быть положительной.
     */
     public void validate() throws ValidationException {
-        if ( (name == null) || name.isBlank() ) {
+        if ((name == null) || name.isBlank()) {
             throw new ValidationException("Не заполнено название фильма");
         }
-        if ( (description != null) && (description.length() > 200) ) {
+        if ((description != null) && (description.length() > 200)) {
             throw new ValidationException("Слишком длинное описание");
         }
-        if ( (releaseDate == null) ||releaseDate.isBefore(LocalDate.of(1895, 12, 28)) ) {
+        if ((releaseDate == null) ||releaseDate.isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Некорректная дата релиза");
         }
-        if ( (duration == null) || duration <= 0 ) {
+        if ((duration == null) || duration <= 0) {
             throw new ValidationException("Некорректная продолжительность фильма");
         }
     }

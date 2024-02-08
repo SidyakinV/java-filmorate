@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 
 import lombok.Data;
+
 import java.time.LocalDate;
 
 @Data
@@ -38,7 +39,7 @@ public class User {
 
     public User copy() {
         Gson gson = new Gson();
-        return gson.fromJson( gson.toJson(this), User.class );
+        return gson.fromJson(gson.toJson(this), User.class);
     }
 
 }
