@@ -22,6 +22,10 @@ public class Film {
     - продолжительность фильма должна быть положительной.
     */
     public void validate() throws ValidationException {
+        if (name == null) {
+            throw new ValidationException("Не заполнено название фильма");
+        }
+        /*
         if (name == null || name.isBlank()) {
             throw new ValidationException("Не заполнено название фильма");
         }
@@ -34,6 +38,7 @@ public class Film {
         if (duration == null || duration <= 0) {
             throw new ValidationException("Некорректная продолжительность фильма");
         }
+        */
     }
 
     public Film copy() {
