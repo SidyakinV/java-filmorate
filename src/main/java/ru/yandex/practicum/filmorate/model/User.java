@@ -15,7 +15,19 @@ public class User {
     private String name;
     private LocalDate birthday;
 
-    public void validate() {
+    public void validate() throws ValidationException {
+        if (email == null || email.isBlank() || !email.contains("@")) {
+            throw new ValidationException("Некорректный адрес электронной почты");
+        }
+        if (login == null || login.isBlank() || login.contains(" ")) {
+            throw new ValidationException("Некорректный логин пользователя");
+        }
+        if (birthday == null || birthday.isAfter(LocalDate.now())) {
+            throw new ValidationException("Некорректная дата рождения");
+        }
+        if (name == null || name.isBlank()) {
+            name = login;
+        }
     }
 
     public User copy() {
