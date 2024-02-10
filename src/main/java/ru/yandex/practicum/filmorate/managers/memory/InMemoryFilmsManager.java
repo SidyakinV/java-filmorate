@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.managers.memory;
 
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.managers.FilmsManager;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -10,10 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class InMemoryFilmsManager implements FilmsManager {
 
-    private Long lastId;
-    final Map<Long, Film> filmsList;
+    private Long lastId = 0L;
+    private final Map<Long, Film> filmsList;
 
     public InMemoryFilmsManager() {
         lastId = 0L;
@@ -26,22 +27,20 @@ public class InMemoryFilmsManager implements FilmsManager {
     }
 
     @Override
-    public Film addFilm(Film film) throws ValidationException {
+    public Film addFilm(Film film) {
         Film newFilm = film.copy();
-        newFilm.validate();
         newFilm.setId(++lastId);
         filmsList.put(newFilm.getId(), newFilm);
         return newFilm;
     }
 
     @Override
-    public Film updateFilm(Film film) throws NotFoundException, ValidationException {
+    public Film updateFilm(Film film) throws NotFoundException {
         if (!filmsList.containsKey(film.getId())) {
             throw new NotFoundException(String.format("Фильм с указанным ID (%d) не найден", film.getId()));
         }
 
         Film newFilm = film.copy();
-        newFilm.validate();
         filmsList.put(newFilm.getId(), newFilm);
         return newFilm;
     }

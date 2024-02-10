@@ -29,14 +29,9 @@ public class UsersManagersTest {
     private void checkEqualsUsers(User oldUser, User newUser) {
         assertNotNull(newUser);
         assertEquals(oldUser.getLogin(), newUser.getLogin());
+        assertEquals(oldUser.getName(), newUser.getName());
         assertEquals(oldUser.getEmail(), newUser.getEmail());
         assertEquals(oldUser.getBirthday(), newUser.getBirthday());
-
-        if (oldUser.getName() == null || oldUser.getName().isBlank()) {
-            assertEquals(oldUser.getLogin(), newUser.getName());
-        } else {
-            assertEquals(oldUser.getName(), newUser.getName());
-        }
     }
 
     @Test
@@ -56,13 +51,9 @@ public class UsersManagersTest {
     }
 
     @Test
-    public void updUser_updList() {
+    public void updateUser_updateList() {
         Long userId;
-        try {
-            userId = userManager.addUser(newDefaultUser()).getId();
-        } catch (ValidationException e) {
-            throw new RuntimeException("Ошибка при изменении пользователя: " + e.getMessage());
-        }
+        userId = userManager.addUser(newDefaultUser()).getId();
 
         User user = newDefaultUser();
         user.setId(userId);
@@ -74,55 +65,13 @@ public class UsersManagersTest {
         User updUser;
         try {
             updUser = userManager.updateUser(user);
-        } catch (ValidationException | NotFoundException e) {
+        } catch (NotFoundException e) {
             throw new RuntimeException(e.getMessage());
         }
         checkEqualsUsers(user, updUser);
 
         User savedUser = userManager.getUser(userId);
         checkEqualsUsers(user, savedUser);
-    }
-
-    // электронная почта не может быть пустой и должна содержать символ @;
-    @Test
-    public void validateUser_throw_badEmail() {
-        User user = newDefaultUser();
-
-        user.setEmail(null);
-        assertThrows(ValidationException.class, user::validate);
-
-        user.setEmail(" ");
-        assertThrows(ValidationException.class, user::validate);
-
-        user.setEmail("user");
-        assertThrows(ValidationException.class, user::validate);
-    }
-
-    // логин не может быть пустым и содержать пробелы;
-    @Test
-    public void validateUser_throw_badLogin() {
-        User user = newDefaultUser();
-
-        user.setLogin(null);
-        assertThrows(ValidationException.class, user::validate);
-
-        user.setLogin("");
-        assertThrows(ValidationException.class, user::validate);
-
-        user.setLogin("User Login");
-        assertThrows(ValidationException.class, user::validate);
-    }
-
-    // дата рождения не может быть в будущем
-    @Test
-    public void validateUser_throw_badBirthday() {
-        User user = newDefaultUser();
-
-        user.setBirthday(null);
-        assertThrows(ValidationException.class, user::validate);
-
-        user.setBirthday(LocalDate.of(2100, 1, 1));
-        assertThrows(ValidationException.class, user::validate);
     }
 
 }

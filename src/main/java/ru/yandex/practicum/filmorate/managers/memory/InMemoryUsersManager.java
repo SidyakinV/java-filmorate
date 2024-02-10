@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.managers.memory;
 
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.managers.UsersManager;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class InMemoryUsersManager implements UsersManager {
 
     private Long lastId;
@@ -26,22 +27,20 @@ public class InMemoryUsersManager implements UsersManager {
     }
 
     @Override
-    public User addUser(User user) throws ValidationException {
+    public User addUser(User user)  {
         User newUser = user.copy();
-        newUser.validate();
         newUser.setId(++lastId);
         usersList.put(newUser.getId(), newUser);
         return newUser;
     }
 
     @Override
-    public User updateUser(User user) throws NotFoundException, ValidationException {
+    public User updateUser(User user) throws NotFoundException {
         if (!usersList.containsKey(user.getId())) {
             throw new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", user.getId()));
         }
 
         User newUser = user.copy();
-        newUser.validate();
         usersList.put(newUser.getId(), newUser);
         return newUser;
     }

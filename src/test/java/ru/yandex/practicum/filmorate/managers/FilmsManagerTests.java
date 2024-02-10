@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.managers.memory.InMemoryFilmsManager;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -41,11 +40,7 @@ public class FilmsManagerTests {
         Film film = newDefaultFilm();
 
         Film newFilm;
-        try {
-            newFilm = filmsManager.addFilm(film);
-        } catch (ValidationException e) {
-            throw new RuntimeException("Ошибка при добавлении фильма: " + e.getMessage());
-        }
+        newFilm = filmsManager.addFilm(film);
         checkEqualsFilms(film, newFilm);
 
         Film savedFilm = filmsManager.getFilm(newFilm.getId());
@@ -53,13 +48,9 @@ public class FilmsManagerTests {
     }
 
     @Test
-    public void updFilm_updList() {
+    public void updateFilm_updateList() {
         Long filmId;
-        try {
-            filmId = filmsManager.addFilm(newDefaultFilm()).getId();
-        } catch (ValidationException e) {
-            throw new RuntimeException("Ошибка при изменении фильма: " + e.getMessage());
-        }
+        filmId = filmsManager.addFilm(newDefaultFilm()).getId();
 
         Film film = newDefaultFilm();
         film.setId(filmId);
@@ -71,94 +62,13 @@ public class FilmsManagerTests {
         Film updFilm;
         try {
             updFilm = filmsManager.updateFilm(film);
-        } catch (NotFoundException | ValidationException e) {
+        } catch (NotFoundException e) {
             throw new RuntimeException("Ошибка при изменении фильма: " + e.getMessage());
         }
         checkEqualsFilms(film, updFilm);
 
         Film savedFilm = filmsManager.getFilm(filmId);
         checkEqualsFilms(film, savedFilm);
-    }
-
-    // название не может быть пустым
-    @Test
-    public void validateFilm_throw_badName() {
-        Film film = newDefaultFilm();
-
-        film.setName(null);
-        assertThrows(ValidationException.class, film::validate);
-
-        film.setName("  ");
-        assertThrows(ValidationException.class, film::validate);
-    }
-
-    // максимальная длина описания — 200 символов
-    @Test
-    public void validateFilm_throw_badDescription() {
-        Film film = newDefaultFilm();
-
-        film.setDescription("*".repeat(201));
-        assertThrows(ValidationException.class, film::validate);
-    }
-
-    @Test
-    public void validateFilm_rightDescription() {
-        Film film = newDefaultFilm();
-
-        film.setDescription(null);
-        assertDoesNotThrow(film::validate);
-
-        film.setDescription(" ");
-        assertDoesNotThrow(film::validate);
-
-        film.setDescription("*");
-        assertDoesNotThrow(film::validate);
-
-        film.setDescription("*".repeat(200));
-        assertDoesNotThrow(film::validate);
-    }
-
-    // дата релиза — не раньше 28 декабря 1895 года
-    @Test
-    public void validateFilm_throw_badReleaseDate() {
-        Film film = newDefaultFilm();
-
-        film.setReleaseDate(null);
-        assertThrows(ValidationException.class, film::validate);
-
-        film.setReleaseDate(LocalDate.of(1895, 12, 27));
-        assertThrows(ValidationException.class, film::validate);
-    }
-
-    @Test
-    void validateFilm_rightReleaseDate() {
-        Film film = newDefaultFilm();
-
-        film.setReleaseDate(LocalDate.of(1895, 12, 28));
-        assertDoesNotThrow(film::validate);
-    }
-
-    // продолжительность фильма должна быть положительной
-    @Test
-    public void validateFilm_throw_badDuration() {
-        Film film = newDefaultFilm();
-
-        film.setDuration(null);
-        assertThrows(ValidationException.class, film::validate);
-
-        film.setDuration(-1);
-        assertThrows(ValidationException.class, film::validate);
-
-        film.setDuration(0);
-        assertThrows(ValidationException.class, film::validate);
-    }
-
-    @Test
-    public void validateFilm_rightDuration() {
-        Film film = newDefaultFilm();
-
-        film.setDuration(1);
-        assertDoesNotThrow(film::validate);
     }
 
 }
