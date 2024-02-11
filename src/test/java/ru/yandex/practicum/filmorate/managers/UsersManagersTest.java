@@ -30,7 +30,7 @@ public class UsersManagersTest {
         assertEquals(oldUser.getLogin(), newUser.getLogin());
         assertEquals(oldUser.getName(), newUser.getName());
         assertEquals(oldUser.getEmail(), newUser.getEmail());
-        assertEquals(oldUser.getBirthday(), newUser.getBirthday() );
+        assertEquals(oldUser.getBirthday(), newUser.getBirthday());
     }
 
     @Test
