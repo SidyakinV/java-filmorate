@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.managers;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.managers.memory.InMemoryUsersManager;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -31,7 +30,7 @@ public class UsersManagersTest {
         assertEquals(oldUser.getLogin(), newUser.getLogin());
         assertEquals(oldUser.getName(), newUser.getName());
         assertEquals(oldUser.getEmail(), newUser.getEmail());
-        assertEquals(oldUser.getBirthday(), newUser.getBirthday());
+        assertEquals(oldUser.getBirthday(), newUser.getBirthday() );
     }
 
     @Test

@@ -13,7 +13,7 @@ import java.util.Map;
 @Service
 public class InMemoryFilmsManager implements FilmsManager {
 
-    private Long lastId = 0L;
+    private Long lastId;
     private final Map<Long, Film> filmsList;
 
     public InMemoryFilmsManager() {
