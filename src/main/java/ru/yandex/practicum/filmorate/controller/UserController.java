@@ -17,12 +17,12 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UsersManager users;
+    private UsersManager usersManager;
 
     // Получение списка всех пользователей
     @GetMapping
     public List<User> listUsers() {
-        return users.getUsersList();
+        return usersManager.getUsersList();
     }
 
     // Создание нового пользователя
@@ -31,27 +31,27 @@ public class UserController {
         try {
             log.debug("Запрос на создание нового пользователя: {}", user);
             validate(user);
-            return users.addUser(user);
+            return usersManager.addUser(user);
         } catch (ValidationException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    // Обновление существующего пользователя по заданному id
-    @PutMapping()
+    // Обновление существующего пользователя
+    @PutMapping
     public User updateUser(@RequestBody User user) {
         try {
             log.debug("Запрос на изменение пользователя: {}", user);
             validate(user);
-            return users.updateUser(user);
+            return usersManager.updateUser(user);
         } catch (NotFoundException | ValidationException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    public static void validate(User user) throws ValidationException {
+    private void validate(User user) throws ValidationException {
         if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             throw new ValidationException("Некорректный адрес электронной почты");
         }

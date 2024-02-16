@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.managers.memory.InMemoryFilmsManager;
+import ru.yandex.practicum.filmorate.managers.FilmsManager;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -17,12 +17,12 @@ import java.util.List;
 public class FilmController {
 
     @Autowired
-    private InMemoryFilmsManager films;
+    private FilmsManager filmsManager;
 
     // Получение списка всех фильмов
     @GetMapping
     public List<Film> listFilms() {
-        return films.getFilmsList();
+        return filmsManager.getFilmsList();
     }
 
     // Добавление нового фильма
@@ -31,20 +31,20 @@ public class FilmController {
         try {
             log.debug("Запрос на добавление нового фильма: {}", film);
             validate(film);
-            return films.addFilm(film);
+            return filmsManager.addFilm(film);
         } catch (ValidationException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    // Обновление существующего фильма по заданному id
+    // Обновление существующего фильма
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
         try {
             log.debug("Запрос на изменение фильма: {}", film);
             validate(film);
-            return films.updateFilm(film);
+            return filmsManager.updateFilm(film);
         } catch (NotFoundException | ValidationException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -58,7 +58,7 @@ public class FilmController {
     - дата релиза — не раньше 28 декабря 1895 года;
     - продолжительность фильма должна быть положительной.
     */
-    public static void validate(Film film) throws ValidationException {
+    private void validate(Film film) throws ValidationException {
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Не заполнено название фильма");
         }
