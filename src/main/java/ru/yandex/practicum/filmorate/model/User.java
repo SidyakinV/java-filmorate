@@ -1,21 +1,22 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.google.gson.Gson;
+
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class Film {
+public class User {
     private Long id;
+    private String email;
+    private String login;
     private String name;
-    private String description;
-    private LocalDate releaseDate;
-    private Integer duration;
+    private LocalDate birthday;
 
-    public Film copy() {
+    public User copy() {
         Gson gson = new Gson();
-        return gson.fromJson(gson.toJson(this), Film.class);
+        return gson.fromJson(gson.toJson(this), User.class);
     }
 
 }
