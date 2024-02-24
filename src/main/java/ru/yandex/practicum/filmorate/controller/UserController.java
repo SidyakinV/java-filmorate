@@ -15,6 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 @Slf4j
+@SuppressWarnings("unused")
 public class UserController {
 
     @Autowired

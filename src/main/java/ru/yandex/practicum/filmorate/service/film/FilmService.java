@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class FilmService {
 
     @Autowired
+    @SuppressWarnings("unused")
     private FilmStorage filmStorage;
 
     /*

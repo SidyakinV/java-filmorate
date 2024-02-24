@@ -16,6 +16,4 @@ public interface UserStorage {
 
     User getUser(Long id) throws NotFoundException;
 
-    void clear();
-
 }

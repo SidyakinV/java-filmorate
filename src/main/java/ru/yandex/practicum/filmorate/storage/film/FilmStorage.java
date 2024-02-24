@@ -16,6 +16,4 @@ public interface FilmStorage {
 
     Film getFilm(Long id) throws NotFoundException;
 
-    void clear();
-
 }

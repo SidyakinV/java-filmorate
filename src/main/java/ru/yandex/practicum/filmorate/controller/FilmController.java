@@ -15,8 +15,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/films")
 @Slf4j
+@SuppressWarnings("unused")
 public class FilmController {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final int POPULAR_DEFAULT = 10;
 
     @Autowired

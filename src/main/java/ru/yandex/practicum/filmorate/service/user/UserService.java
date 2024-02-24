@@ -16,6 +16,7 @@ import java.util.Set;
 public class UserService {
 
     @Autowired
+    @SuppressWarnings("unused")
     private UserStorage userStorage;
 
     /*
