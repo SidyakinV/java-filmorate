@@ -1,8 +1,7 @@
-package ru.yandex.practicum.filmorate.managers.memory;
+package ru.yandex.practicum.filmorate.storage.user;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.managers.UsersManager;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
@@ -10,13 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class InMemoryUsersManager implements UsersManager {
+@Component
+public class InMemoryUserStorage implements UserStorage {
 
     private Long lastId;
     final Map<Long, User> usersList;
 
-    public InMemoryUsersManager() {
+    public InMemoryUserStorage() {
         lastId = 0L;
         usersList = new HashMap<>();
     }
@@ -27,11 +26,10 @@ public class InMemoryUsersManager implements UsersManager {
     }
 
     @Override
-    public User addUser(User user)  {
-        User newUser = user.copy();
-        newUser.setId(++lastId);
-        usersList.put(newUser.getId(), newUser);
-        return newUser;
+    public User addUser(User user) {
+        user.setId(++lastId);
+        usersList.put(user.getId(), user);
+        return user;
     }
 
     @Override
@@ -40,15 +38,17 @@ public class InMemoryUsersManager implements UsersManager {
             throw new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", user.getId()));
         }
 
-        User newUser = user.copy();
-        usersList.put(newUser.getId(), newUser);
-        return newUser;
+        usersList.put(user.getId(), user);
+        return user;
     }
 
     @Override
-    public User getUser(Long id) {
+    public User getUser(Long id) throws NotFoundException {
         User user = usersList.get(id);
-        return (user != null) ? user.copy() : null;
+        if (user == null) {
+            throw new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", id));
+        }
+        return user;
     }
 
     @Override

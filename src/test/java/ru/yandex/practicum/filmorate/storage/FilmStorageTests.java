@@ -1,20 +1,20 @@
-package ru.yandex.practicum.filmorate.managers;
+package ru.yandex.practicum.filmorate.storage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.managers.memory.InMemoryFilmsManager;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
-public class FilmsManagerTests {
+public class FilmStorageTests {
 
-    private final InMemoryFilmsManager filmsManager;
+    private final InMemoryFilmStorage filmsManager;
 
-    public FilmsManagerTests() {
-        filmsManager = new InMemoryFilmsManager();
+    public FilmStorageTests() {
+        filmsManager = new InMemoryFilmStorage();
     }
 
     private Film newDefaultFilm() {
@@ -36,7 +36,7 @@ public class FilmsManagerTests {
     }
 
     @Test
-    public void addFilm_addToList() {
+    public void addFilm_addToList() throws NotFoundException {
         Film film = newDefaultFilm();
 
         Film newFilm;
@@ -48,7 +48,7 @@ public class FilmsManagerTests {
     }
 
     @Test
-    public void updateFilm_updateList() {
+    public void updateFilm_updateList() throws NotFoundException {
         Long filmId;
         filmId = filmsManager.addFilm(newDefaultFilm()).getId();
 

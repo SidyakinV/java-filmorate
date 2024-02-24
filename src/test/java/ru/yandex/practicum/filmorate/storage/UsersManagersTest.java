@@ -1,8 +1,8 @@
-package ru.yandex.practicum.filmorate.managers;
+package ru.yandex.practicum.filmorate.storage;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.managers.memory.InMemoryUsersManager;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.model.User;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,10 +11,10 @@ import java.time.LocalDate;
 
 public class UsersManagersTest {
 
-    private final InMemoryUsersManager userManager;
+    private final InMemoryUserStorage userManager;
 
     public UsersManagersTest() {
-        userManager = new InMemoryUsersManager();
+        userManager = new InMemoryUserStorage();
     }
 
     private User newDefaultUser() {
@@ -34,7 +34,7 @@ public class UsersManagersTest {
     }
 
     @Test
-    public void addUser_addToList() {
+    public void addUser_addToList() throws NotFoundException {
         User user = newDefaultUser();
 
         User newUser;
@@ -50,7 +50,7 @@ public class UsersManagersTest {
     }
 
     @Test
-    public void updateUser_updateList() {
+    public void updateUser_updateList() throws NotFoundException {
         Long userId;
         userId = userManager.addUser(newDefaultUser()).getId();
 

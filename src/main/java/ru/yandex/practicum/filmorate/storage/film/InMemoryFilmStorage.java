@@ -1,8 +1,7 @@
-package ru.yandex.practicum.filmorate.managers.memory;
+package ru.yandex.practicum.filmorate.storage.film;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.managers.FilmsManager;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
@@ -10,13 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class InMemoryFilmsManager implements FilmsManager {
+@Component
+public class InMemoryFilmStorage implements FilmStorage {
 
     private Long lastId;
     private final Map<Long, Film> filmsList;
 
-    public InMemoryFilmsManager() {
+    public InMemoryFilmStorage() {
         lastId = 0L;
         filmsList = new HashMap<>();
     }
@@ -28,10 +27,9 @@ public class InMemoryFilmsManager implements FilmsManager {
 
     @Override
     public Film addFilm(Film film) {
-        Film newFilm = film.copy();
-        newFilm.setId(++lastId);
-        filmsList.put(newFilm.getId(), newFilm);
-        return newFilm;
+        film.setId(++lastId);
+        filmsList.put(film.getId(), film);
+        return film;
     }
 
     @Override
@@ -40,15 +38,17 @@ public class InMemoryFilmsManager implements FilmsManager {
             throw new NotFoundException(String.format("Фильм с указанным ID (%d) не найден", film.getId()));
         }
 
-        Film newFilm = film.copy();
-        filmsList.put(newFilm.getId(), newFilm);
-        return newFilm;
+        filmsList.put(film.getId(), film);
+        return film;
     }
 
     @Override
-    public Film getFilm(Long id) {
+    public Film getFilm(Long id) throws NotFoundException {
         Film film = filmsList.get(id);
-        return (film != null) ? film.copy() : null;
+        if (film == null) {
+            throw new NotFoundException(String.format("Фильм с указанным ID (%d) не найден", id));
+        }
+        return film;
     }
 
     @Override

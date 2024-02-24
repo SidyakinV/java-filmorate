@@ -1,9 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.google.gson.Gson;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Film {
@@ -12,10 +13,5 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private Integer duration;
-
-    public Film copy() {
-        Gson gson = new Gson();
-        return gson.fromJson(gson.toJson(this), Film.class);
-    }
-
+    private Set<Long> userLikes = new HashSet<>();
 }
