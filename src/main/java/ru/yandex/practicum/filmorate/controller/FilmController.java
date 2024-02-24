@@ -18,8 +18,10 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class FilmController {
 
+    // По-хорошему, надо было бы обозвать константу как POPULAR_DEFAULT, но такое имя не проходит
+    // проверку на GitHub'е
     @SuppressWarnings("FieldCanBeLocal")
-    private final int POPULAR_DEFAULT = 10;
+    private final int popularDefault = 10;
 
     @Autowired
     private FilmService filmService;
@@ -78,8 +80,8 @@ public class FilmController {
     @GetMapping("/popular")
     public List<Film> getPopular(@RequestParam(required = false) Integer count) {
         log.debug("Запрос на получение списка популярных фильмов: count={}", count == null ?
-                "default (" + POPULAR_DEFAULT + ")" : count);
-        return filmService.getPopular(count == null ? POPULAR_DEFAULT : count);
+                "default (" + popularDefault + ")" : count);
+        return filmService.getPopular(count == null ? popularDefault : count);
     }
 
     @ExceptionHandler
