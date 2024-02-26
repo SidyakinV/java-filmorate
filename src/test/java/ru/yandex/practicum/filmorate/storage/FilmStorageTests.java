@@ -11,10 +11,10 @@ import java.time.LocalDate;
 
 public class FilmStorageTests {
 
-    private final InMemoryFilmStorage filmsManager;
+    private final InMemoryFilmStorage filmStorage;
 
     public FilmStorageTests() {
-        filmsManager = new InMemoryFilmStorage();
+        filmStorage = new InMemoryFilmStorage();
     }
 
     private Film newDefaultFilm() {
@@ -22,6 +22,14 @@ public class FilmStorageTests {
         film.setName("Film Name");
         film.setReleaseDate(LocalDate.of(2001, 1, 1));
         film.setDuration(120);
+        return film;
+    }
+
+    public Film getFilm(Long id) throws NotFoundException {
+        Film film = filmStorage.getFilm(id);
+        if (film == null) {
+            throw new NotFoundException(String.format("Фильм с указанным ID (%d) не найден", id));
+        }
         return film;
     }
 
@@ -40,17 +48,17 @@ public class FilmStorageTests {
         Film film = newDefaultFilm();
 
         Film newFilm;
-        newFilm = filmsManager.addFilm(film);
+        newFilm = filmStorage.addFilm(film);
         checkEqualsFilms(film, newFilm);
 
-        Film savedFilm = filmsManager.getFilm(newFilm.getId());
+        Film savedFilm = getFilm(newFilm.getId());
         checkEqualsFilms(film, savedFilm);
     }
 
     @Test
     public void updateFilm_updateList() throws NotFoundException {
         Long filmId;
-        filmId = filmsManager.addFilm(newDefaultFilm()).getId();
+        filmId = filmStorage.addFilm(newDefaultFilm()).getId();
 
         Film film = newDefaultFilm();
         film.setId(filmId);
@@ -61,13 +69,13 @@ public class FilmStorageTests {
 
         Film updFilm;
         try {
-            updFilm = filmsManager.updateFilm(film);
+            updFilm = filmStorage.updateFilm(film);
         } catch (NotFoundException e) {
             throw new RuntimeException("Ошибка при изменении фильма: " + e.getMessage());
         }
         checkEqualsFilms(film, updFilm);
 
-        Film savedFilm = filmsManager.getFilm(filmId);
+        Film savedFilm = getFilm(filmId);
         checkEqualsFilms(film, savedFilm);
     }
 

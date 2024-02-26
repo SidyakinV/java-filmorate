@@ -43,12 +43,8 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUser(Long id) throws NotFoundException {
-        User user = usersList.get(id);
-        if (user == null) {
-            throw new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", id));
-        }
-        return user;
+    public User getUser(Long id) {
+        return usersList.get(id);
     }
 
 }

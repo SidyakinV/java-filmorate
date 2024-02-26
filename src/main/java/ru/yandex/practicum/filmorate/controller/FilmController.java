@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
@@ -10,21 +10,15 @@ import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
-@SuppressWarnings("unused")
+@RequiredArgsConstructor
 public class FilmController {
 
-    // По-хорошему, надо было бы обозвать константу как POPULAR_DEFAULT, но такое имя не проходит
-    // проверку на GitHub'е
-    @SuppressWarnings("FieldCanBeLocal")
-    private final int popularDefault = 10;
-
     @Autowired
-    private FilmService filmService;
+    private final FilmService filmService;
 
     // Добавление нового фильма
     // POST /films
@@ -78,31 +72,9 @@ public class FilmController {
     // Если значение параметра count не задано, верните первые 10
     // GET /films/popular?count={count}
     @GetMapping("/popular")
-    public List<Film> getPopular(@RequestParam(required = false) Integer count) {
-        log.debug("Запрос на получение списка популярных фильмов: count={}", count == null ?
-                "default (" + popularDefault + ")" : count);
-        return filmService.getPopular(count == null ? popularDefault : count);
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleBadRequest(final ValidationException e) {
-        log.error(e.getMessage());
-        return Map.of("error", e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleNotFound(final NotFoundException e) {
-        log.error(e.getMessage());
-        return Map.of("error", e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleException(final Exception e) {
-        log.error(e.getMessage());
-        return Map.of("error", e.getMessage());
+    public List<Film> getPopular(@RequestParam(defaultValue = "10") Integer count) {
+        log.debug("Запрос на получение списка популярных фильмов: count={}", count);
+        return filmService.getPopular(count);
     }
 
 }

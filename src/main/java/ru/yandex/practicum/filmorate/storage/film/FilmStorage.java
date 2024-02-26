@@ -14,6 +14,6 @@ public interface FilmStorage {
 
     Film updateFilm(Film film) throws NotFoundException, ValidationException;
 
-    Film getFilm(Long id) throws NotFoundException;
+    Film getFilm(Long id);
 
 }

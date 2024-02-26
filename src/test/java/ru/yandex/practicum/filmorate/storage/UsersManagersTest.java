@@ -11,10 +11,10 @@ import java.time.LocalDate;
 
 public class UsersManagersTest {
 
-    private final InMemoryUserStorage userManager;
+    private final InMemoryUserStorage userStorage;
 
     public UsersManagersTest() {
-        userManager = new InMemoryUserStorage();
+        userStorage = new InMemoryUserStorage();
     }
 
     private User newDefaultUser() {
@@ -22,6 +22,14 @@ public class UsersManagersTest {
         user.setEmail("user@mail.ru");
         user.setLogin("user");
         user.setBirthday(LocalDate.of(2001, 1, 1));
+        return user;
+    }
+
+    public User getUser(Long id) throws NotFoundException {
+        User user = userStorage.getUser(id);
+        if (user == null) {
+            throw  new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", id));
+        }
         return user;
     }
 
@@ -39,20 +47,20 @@ public class UsersManagersTest {
 
         User newUser;
         try {
-            newUser = userManager.addUser(user);
+            newUser = userStorage.addUser(user);
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при добавлении нового пользователя: " + e.getMessage());
         }
         checkEqualsUsers(user, newUser);
 
-        User savedUser = userManager.getUser(newUser.getId());
+        User savedUser = getUser(newUser.getId());
         checkEqualsUsers(user, savedUser);
     }
 
     @Test
     public void updateUser_updateList() throws NotFoundException {
         Long userId;
-        userId = userManager.addUser(newDefaultUser()).getId();
+        userId = userStorage.addUser(newDefaultUser()).getId();
 
         User user = newDefaultUser();
         user.setId(userId);
@@ -63,13 +71,13 @@ public class UsersManagersTest {
 
         User updUser;
         try {
-            updUser = userManager.updateUser(user);
+            updUser = userStorage.updateUser(user);
         } catch (NotFoundException e) {
             throw new RuntimeException(e.getMessage());
         }
         checkEqualsUsers(user, updUser);
 
-        User savedUser = userManager.getUser(userId);
+        User savedUser = getUser(userId);
         checkEqualsUsers(user, savedUser);
     }
 

@@ -43,12 +43,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film getFilm(Long id) throws NotFoundException {
-        Film film = filmsList.get(id);
-        if (film == null) {
-            throw new NotFoundException(String.format("Фильм с указанным ID (%d) не найден", id));
-        }
-        return film;
+    public Film getFilm(Long id) {
+        return filmsList.get(id);
     }
 
 }
