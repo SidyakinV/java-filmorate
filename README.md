@@ -1,2 +1,8 @@
 # java-filmorate
-Template repository for Filmorate project.
+
+
+Структура БД 
+Схематически структура БД представлена на рисунке
+![Схема БД](StructDB.png)
+
+
