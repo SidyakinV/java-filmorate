@@ -35,31 +35,20 @@ LIMIT 10
 SELECT friends.friend_id, user.name
 FROM friends
   JOIN user ON friends.friend_id = user.id
-WHERE friends.user_id = 1
-  AND friends.is_confirmed <> 0
+WHERE friends.user_id = {user_id}
 ORDER BY user.name
 ```
 
 **3. Список общих друзей**
 
 ```
-SELECT user.id, user.name
-FROM (
-    SELECT friend_id
-    FROM friends
-    WHERE user_id = 1
-      AND is_confirmed = 1 
-    ) AS user1
-  JOIN (
-    SELECT friend_id
-    FROM friends
-    WHERE user_id = 2
-      AND is_confirmed = 1 
-    ) AS user2
-    ON user1.friend_id = user2.friend_id
-  JOIN
-    user on user.id = user1.friend_id
-ORDER BY user.name
+SELECT u.*
+FROM friends AS f1
+  INNER JOIN friends AS f2 on f1.friend_id = f2.friend_id  
+  INNER JOIN `user` AS u ON f1.friend_id = u.id
+WHERE f1.user_id = {user_id_1}
+  AND f2.user_id = {user_id_2}
+ORDER BY u.name
 ```
 
 
