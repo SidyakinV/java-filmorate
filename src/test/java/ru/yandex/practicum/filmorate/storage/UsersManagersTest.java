@@ -28,7 +28,7 @@ public class UsersManagersTest {
     public User getUser(Long id) throws NotFoundException {
         User user = userStorage.getUser(id);
         if (user == null) {
-            throw  new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", id));
+            throw new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", id));
         }
         return user;
     }

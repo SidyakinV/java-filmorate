@@ -27,30 +27,30 @@ public class FilmDbStorageTest {
     public void addFilmTest() throws ValidationException {
 
         Film newFilm = createDefaultFilm();
-		FilmDbStorage filmDbStorage = new FilmDbStorage(jdbcTemplate);
-		Film film = filmDbStorage.addFilm(newFilm);
-		newFilm.setId(film.getId());
+        FilmDbStorage filmDbStorage = new FilmDbStorage(jdbcTemplate);
+        Film film = filmDbStorage.addFilm(newFilm);
+        newFilm.setId(film.getId());
 
-		Film savedFilm = filmDbStorage.getFilm(film.getId());
+        Film savedFilm = filmDbStorage.getFilm(film.getId());
 
-		compare(newFilm, savedFilm);
+        compare(newFilm, savedFilm);
     }
 
     @Test
     public void updateFilmTest() throws ValidationException, NotFoundException {
         Film newFilm = createDefaultFilm();
-		FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
-		Film film = filmStorage.addFilm(newFilm);
+        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
+        Film film = filmStorage.addFilm(newFilm);
 
         film.setName("Просто фильм");
         film.setDescription("Простое описание");
         film.setReleaseDate(LocalDate.of(2001, 1, 1));
         film.setDuration(111);
-		filmStorage.updateFilm(film);
+        filmStorage.updateFilm(film);
 
-		Film savedFilm = filmStorage.getFilm(film.getId());
+        Film savedFilm = filmStorage.getFilm(film.getId());
 
-		compare(film, savedFilm);
+        compare(film, savedFilm);
     }
 
     @Test

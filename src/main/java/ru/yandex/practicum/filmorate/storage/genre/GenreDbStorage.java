@@ -38,7 +38,7 @@ public class GenreDbStorage implements GenreStorage {
         SqlRowSet genreRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM genre WHERE id = ?", id);
 
-        if(!genreRows.next()) {
+        if (!genreRows.next()) {
             log.info("Жанр с указанным ID {} не найден в базе данных", id);
             return null;
         }

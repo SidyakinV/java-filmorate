@@ -38,7 +38,7 @@ public class MpaDbStorage implements MpaStorage {
         SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM rating WHERE id = ?", id);
 
-        if(!mpaRows.next()) {
+        if (!mpaRows.next()) {
             log.info("MPA-рейтинг с указанным ID {} не найден в базе данных", id);
             return null;
         }
