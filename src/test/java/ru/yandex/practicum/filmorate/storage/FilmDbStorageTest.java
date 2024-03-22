@@ -101,6 +101,13 @@ public class FilmDbStorageTest {
     }
 
     private void compare(Film film1, Film film2) {
+        assertNotNull(film1);
+        assertNotNull(film2);
+        assertEquals(film1.getId(), film2.getId());
+        assertEquals(film1.getName(), film2.getName());
+        assertEquals(film1.getDescription(), film2.getDescription());
+        assertEquals(film1.getDuration(), film2.getDuration());
+        assertEquals(film1.getReleaseDate(), film2.getReleaseDate());
     }
 
 }

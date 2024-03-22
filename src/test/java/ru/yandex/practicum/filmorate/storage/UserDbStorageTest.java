@@ -124,6 +124,7 @@ class UserDbStorageTest {
 	private void compare(User user1, User user2) {
 		assertNotNull(user1);
 		assertNotNull(user2);
+		assertEquals(user1.getId(), user2.getId());
 		assertEquals(user1.getLogin(), user2.getLogin());
 		assertEquals(user1.getName(), user2.getName());
 		assertEquals(user1.getEmail(), user2.getEmail());

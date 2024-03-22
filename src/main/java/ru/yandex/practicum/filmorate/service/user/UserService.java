@@ -73,7 +73,7 @@ public class UserService {
         return userStorage.getFriends(userId);
     }
 
-    public List<User> getCommonFriends(Long userId, Long otherId) throws NotFoundException {
+    public List<User> getCommonFriends(Long userId, Long otherId)  {
         log.debug("Запрос на получение списка общих друзей: userId={}, otherId={}", userId, otherId);
         return userStorage.getCommonFriends(userId, otherId);
     }
