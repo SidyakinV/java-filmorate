@@ -87,7 +87,7 @@ public class UserDbStorage implements UserStorage {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM `user` WHERE id = ?", id);
 
-        if(!userRows.next()) {
+        if (!userRows.next()) {
             log.info("Пользователь с идентификатором {} не найден в базе данных", id);
             return null;
         }
