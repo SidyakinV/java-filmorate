@@ -8,12 +8,10 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -22,9 +20,6 @@ public class FilmService {
 
     @Autowired
     private final FilmStorage filmStorage;
-
-    @Autowired
-    private final UserService userService;
 
     /*
     Список операций:
@@ -64,25 +59,17 @@ public class FilmService {
 
     public void addUserLike(Long filmId, Long userId) throws NotFoundException, ValidationException {
         log.debug("Запрос на установку лайка фильму: filmId={}, userId={}", filmId, userId);
-        Film film = getFilm(filmId);
-        film.getUserLikes().add(userService.getUser(userId).getId());
-        filmStorage.updateFilm(film);
+        filmStorage.addUserLike(filmId, userId);
     }
 
     public void deleteUserLike(Long filmId, Long userId) throws NotFoundException, ValidationException {
         log.debug("Запрос на снятие лайка фильму: filmId={}, userId={}", filmId, userId);
-        Film film = getFilm(filmId);
-        film.getUserLikes().remove(userService.getUser(userId).getId());
-        filmStorage.updateFilm(film);
+        filmStorage.deleteUserLike(filmId, userId);
     }
 
     public List<Film> getPopular(Integer count) {
         log.debug("Запрос на получение списка популярных фильмов: count={}", count);
-        return
-                filmStorage.getFilmsList().stream()
-                        .sorted((f1, f2) -> Integer.compare(f2.getUserLikes().size(), f1.getUserLikes().size()))
-                        .limit(count)
-                        .collect(Collectors.toList());
+        return filmStorage.getPopular(count);
     }
 
     /*
@@ -93,7 +80,7 @@ public class FilmService {
     - продолжительность фильма должна быть положительной.
     */
     private void validate(Film film) throws ValidationException {
-        log.debug("Ошибка валидации фильма: {}", film);
+        log.debug("Валидация фильма: {}", film);
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Не заполнено название фильма");
         }

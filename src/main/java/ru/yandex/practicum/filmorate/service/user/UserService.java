@@ -10,9 +10,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -60,53 +58,28 @@ public class UserService {
         return userStorage.getUsersList();
     }
 
-    public void addFriend(Long userId, Long friendId) throws NotFoundException {
+    public void addFriend(Long userId, Long friendId)  {
         log.debug("Запрос на добавление в друзья: userId={}, friendId={}", userId, friendId);
-        User user = getUser(userId);
-        User friend = getUser(friendId);
-        user.getFriends().add(friendId);
-        friend.getFriends().add(userId);
+        userStorage.addFriend(userId, friendId);
     }
 
-    public void deleteFriend(Long userId, Long friendId) throws NotFoundException {
+    public void deleteFriend(Long userId, Long friendId)  {
         log.debug("Запрос на удаление из друзей: userId={}, friendId={}", userId, friendId);
-        User user = getUser(userId);
-        User friend = getUser(friendId);
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(userId);
+        userStorage.deleteFriend(userId, friendId);
     }
 
-    public List<User> getFriends(Long userId) throws NotFoundException {
+    public List<User> getFriends(Long userId) {
         log.debug("Запрос на получение списка друзей пользователя: userId={}", userId);
-        User user = getUser(userId);
-        List<User> users = new ArrayList<>();
-        for (Long id : user.getFriends()) {
-            try {
-                users.add(getUser(id));
-            } catch (NotFoundException ignored) {
-            }
-        }
-        return users;
+        return userStorage.getFriends(userId);
     }
 
     public List<User> getCommonFriends(Long userId, Long otherId) throws NotFoundException {
         log.debug("Запрос на получение списка общих друзей: userId={}, otherId={}", userId, otherId);
-        Set<Long> friends1 = getUser(userId).getFriends();
-        Set<Long> friends2 = getUser(otherId).getFriends();
-        List<User> list = new ArrayList<>();
-        for (Long id : friends1) {
-            if (friends2.contains(id)) {
-                try {
-                    list.add(getUser(id));
-                } catch (NotFoundException ignored) {
-                }
-            }
-        }
-        return list;
+        return userStorage.getCommonFriends(userId, otherId);
     }
 
     private void validate(User user) throws ValidationException {
-        log.debug("Ошибка валидации пользователя: {}", user);
+        log.debug("Валидация пользователя: {}", user);
         if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             throw new ValidationException("Некорректный адрес электронной почты");
         }

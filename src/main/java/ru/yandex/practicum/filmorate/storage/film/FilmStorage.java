@@ -16,4 +16,10 @@ public interface FilmStorage {
 
     Film getFilm(Long id);
 
+    void addUserLike(Long filmId, Long userId) throws NotFoundException, ValidationException;
+
+    void deleteUserLike(Long filmId, Long userId) throws NotFoundException, ValidationException;
+
+    List<Film> getPopular(Integer count);
+
 }
