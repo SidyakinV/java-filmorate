@@ -50,7 +50,7 @@ public class FilmDbStorage implements FilmStorage {
 
         String sqlQuery =
                 "insert into film (name, description, release_date, duration, rating_id) " +
-                "values (?, ?, ?, ?, ?)";
+                        "values (?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -82,8 +82,8 @@ public class FilmDbStorage implements FilmStorage {
 
         String sqlQuery =
                 "update film set " +
-                "  name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? " +
-                "where id = ?";
+                        "  name = ?, description = ?, release_date = ?, duration = ?, rating_id = ? " +
+                        "where id = ?";
 
         jdbcTemplate.update(sqlQuery,
                 film.getName(),
@@ -110,7 +110,7 @@ public class FilmDbStorage implements FilmStorage {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM film WHERE id = ?", id);
 
-        if(!filmRows.next()) {
+        if (!filmRows.next()) {
             log.info("Фильм с указанным ID {} не найден в базе данных", id);
             return null;
         }
@@ -124,9 +124,9 @@ public class FilmDbStorage implements FilmStorage {
         checkUserExists(userId);
 
         String sqlQuery =
-            "INSERT INTO user_film (film_id, user_id) \n " +
-            "SELECT ?, ? \n " +
-            "WHERE NOT EXISTS (SELECT * FROM user_film WHERE film_id = ? AND user_id = ?) ";
+                "INSERT INTO user_film (film_id, user_id) \n " +
+                        "SELECT ?, ? \n " +
+                        "WHERE NOT EXISTS (SELECT * FROM user_film WHERE film_id = ? AND user_id = ?) ";
         jdbcTemplate.update(sqlQuery,
                 filmId, userId, filmId, userId);
     }
@@ -138,7 +138,7 @@ public class FilmDbStorage implements FilmStorage {
 
         String sqlQuery =
                 "DELETE FROM user_film " +
-                "WHERE film_id = ? AND user_id = ? ";
+                        "WHERE film_id = ? AND user_id = ? ";
         jdbcTemplate.update(sqlQuery,
                 filmId, userId);
     }
@@ -149,11 +149,11 @@ public class FilmDbStorage implements FilmStorage {
 
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(
                 "SELECT \n" +
-                    "  film.*, \n" +
-                    "  (SELECT count(*) FROM user_film WHERE film.id = user_film.film_id) AS count_likes \n" +
-                    "FROM film \n" +
-                    "ORDER BY count_likes DESC, film.name \n" +
-                    "LIMIT " + count);
+                        "  film.*, \n" +
+                        "  (SELECT count(*) FROM user_film WHERE film.id = user_film.film_id) AS count_likes \n" +
+                        "FROM film \n" +
+                        "ORDER BY count_likes DESC, film.name \n" +
+                        "LIMIT " + count);
 
         while (filmRows.next()) {
             films.add(filmFromRowSet(filmRows));
@@ -167,8 +167,8 @@ public class FilmDbStorage implements FilmStorage {
 
         SqlRowSet likeRows = jdbcTemplate.queryForRowSet(
                 "SELECT * \n" +
-                    "FROM user_film \n " +
-                    "WHERE film_id = ? ",
+                        "FROM user_film \n " +
+                        "WHERE film_id = ? ",
                 filmId);
 
         while (likeRows.next()) {
@@ -220,10 +220,10 @@ public class FilmDbStorage implements FilmStorage {
 
         sqlQuery =
                 "INSERT INTO film_genre (film_id, genre_id) \n" +
-                "SELECT ?, id \n" +
-                "FROM genre \n" +
-                "WHERE id IN (" + listId + ") \n" +
-                "AND id NOT IN (SELECT genre_id FROM film_genre WHERE film_id = ?)";
+                        "SELECT ?, id \n" +
+                        "FROM genre \n" +
+                        "WHERE id IN (" + listId + ") \n" +
+                        "AND id NOT IN (SELECT genre_id FROM film_genre WHERE film_id = ?)";
         jdbcTemplate.update(sqlQuery, film.getId(), film.getId());
     }
 
@@ -237,7 +237,7 @@ public class FilmDbStorage implements FilmStorage {
         SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM rating WHERE id = ?", id);
 
-        if(!mpaRows.next()) {
+        if (!mpaRows.next()) {
             log.info("Код MPA {} отсутствует в списке", id);
             throw new ValidationException(String.format("Код MPA %d отсутствует в списке", id));
         }
@@ -249,7 +249,7 @@ public class FilmDbStorage implements FilmStorage {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM film WHERE id = ?", id);
 
-        if(!filmRows.next()) {
+        if (!filmRows.next()) {
             log.info("Фильм с указанным ID {} не найден в базе данных", id);
             throw new ValidationException(String.format("Фильм с указанным ID %d не найден в базе данных", id));
         }
@@ -259,7 +259,7 @@ public class FilmDbStorage implements FilmStorage {
 
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM `user` WHERE id = ?", id);
-        if(!filmRows.next()) {
+        if (!filmRows.next()) {
             log.info("Пользователь с указанным ID {} не найден в базе данных", id);
             throw new ValidationException(String.format("Пользователь с указанным ID %d не найден в базе данных", id));
         }
