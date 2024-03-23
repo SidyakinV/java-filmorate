@@ -10,4 +10,6 @@ public interface GenreStorage {
 
     Genre getGenre(Integer id);
 
+    List<Genre> getFilmGenres(Long filmId);
+
 }

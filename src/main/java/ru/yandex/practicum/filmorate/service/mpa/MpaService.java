@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service.mpa;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -15,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MpaService {
 
-    @Autowired
     private final MpaStorage mpaStorage;
 
     public List<Mpa> getMpaList() {

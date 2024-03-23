@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
+import java.util.Set;
 
 public interface FilmStorage {
 
@@ -21,5 +22,7 @@ public interface FilmStorage {
     void deleteUserLike(Long filmId, Long userId) throws NotFoundException, ValidationException;
 
     List<Film> getPopular(Integer count);
+
+    Set<Long> getLikes(Long filmId);
 
 }

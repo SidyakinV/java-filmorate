@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
 
-@Component
+@Component("memUserStorage")
 public class InMemoryUserStorage implements UserStorage {
 
     private Long lastId;

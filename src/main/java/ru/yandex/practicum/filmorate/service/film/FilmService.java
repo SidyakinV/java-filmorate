@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.service.film;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -15,11 +15,11 @@ import java.util.List;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class FilmService {
 
     @Autowired
-    private final FilmStorage filmStorage;
+    @Qualifier("dbFilmStorage")
+    private FilmStorage filmStorage;
 
     /*
     Список операций:

@@ -1,7 +1,8 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -12,22 +13,27 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
 import java.sql.PreparedStatement;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-@Component
-@Primary
+@Component("dbFilmStorage")
 @Slf4j
+@RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Qualifier("dbGenreStorage")
+    private final GenreStorage genreStorage;
+
+    @Qualifier("dbMpaStorage")
+    private final MpaStorage mpaStorage;
+
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     public List<Film> getFilmsList() {
@@ -180,28 +186,13 @@ public class FilmDbStorage implements FilmStorage {
 
     private Film filmFromRowSet(SqlRowSet filmRow) {
         Film film = new Film();
-
         film.setId(filmRow.getLong("id"));
         film.setName(filmRow.getString("name"));
         film.setDescription(filmRow.getString("description"));
         film.setReleaseDate(Objects.requireNonNull(filmRow.getDate("release_date")).toLocalDate());
         film.setDuration(filmRow.getInt("duration"));
-
-        Integer rating = filmRow.getInt("rating_id");
-        if (filmRow.wasNull()) {
-            rating = null;
-        }
-        film.getMpa().setId(rating);
-
-        SqlRowSet genresRows = jdbcTemplate.queryForRowSet(
-                "SELECT genre_id FROM film_genre WHERE film_id = ?", film.getId());
-
-        while (genresRows.next()) {
-            Genre genre = new Genre();
-            genre.setId(genresRows.getInt("genre_id"));
-            film.getGenres().add(genre);
-        }
-
+        film.setGenres(genreStorage.getFilmGenres(film.getId()));
+        film.setMpa(mpaStorage.getMpa(filmRow.getInt("rating_id")));
         return film;
     }
 

@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Component("dbMpaStorage")
 @Primary
 @Slf4j
 @RequiredArgsConstructor

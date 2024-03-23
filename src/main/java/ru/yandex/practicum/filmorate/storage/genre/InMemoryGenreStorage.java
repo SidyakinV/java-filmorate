@@ -1,13 +1,11 @@
 package ru.yandex.practicum.filmorate.storage.genre;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
 
-@Component
-@Slf4j
+@Component("memGenreStorage")
 public class InMemoryGenreStorage implements GenreStorage {
 
     @Override
@@ -17,6 +15,11 @@ public class InMemoryGenreStorage implements GenreStorage {
 
     @Override
     public Genre getGenre(Integer id) {
+        return null;
+    }
+
+    @Override
+    public List<Genre> getFilmGenres(Long filmId) {
         return null;
     }
 

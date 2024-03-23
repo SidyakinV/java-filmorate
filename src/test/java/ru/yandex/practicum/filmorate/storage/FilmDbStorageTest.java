@@ -10,7 +10,13 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.genre.GenreDbStorage;
+import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.mpa.MpaDbStorage;
+import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,21 +31,22 @@ public class FilmDbStorageTest {
 
     @Test
     public void addFilmTest() throws ValidationException {
+        FilmStorage filmStorage = newFilmStorage();
 
         Film newFilm = createDefaultFilm();
-        FilmDbStorage filmDbStorage = new FilmDbStorage(jdbcTemplate);
-        Film film = filmDbStorage.addFilm(newFilm);
+        Film film = filmStorage.addFilm(newFilm);
         newFilm.setId(film.getId());
 
-        Film savedFilm = filmDbStorage.getFilm(film.getId());
+        Film savedFilm = filmStorage.getFilm(film.getId());
 
         compare(newFilm, savedFilm);
     }
 
     @Test
     public void updateFilmTest() throws ValidationException, NotFoundException {
+        FilmStorage filmStorage = newFilmStorage();
+
         Film newFilm = createDefaultFilm();
-        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         Film film = filmStorage.addFilm(newFilm);
 
         film.setName("Просто фильм");
@@ -54,9 +61,10 @@ public class FilmDbStorageTest {
     }
 
     @Test
-    public void addLikeTest() throws ValidationException {
-        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
-        UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
+    public void addLikeTest() throws ValidationException, NotFoundException {
+
+        FilmStorage filmStorage = newFilmStorage();
+        UserStorage userStorage = new UserDbStorage(jdbcTemplate);
 
         Film film = createDefaultFilm();
         User user = UserDbStorageTest.createDefaultUser();
@@ -69,12 +77,14 @@ public class FilmDbStorageTest {
 
         assertEquals(1, likes.size());
         assertTrue(likes.contains(user.getId()));
+
     }
 
     @Test
-    public void removeLikeTest() throws ValidationException {
-        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
-        UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
+    public void removeLikeTest() throws ValidationException, NotFoundException {
+
+        FilmStorage filmStorage = newFilmStorage();
+        UserStorage userStorage = new UserDbStorage(jdbcTemplate);
 
         Film film = createDefaultFilm();
         User user = UserDbStorageTest.createDefaultUser();
@@ -89,6 +99,7 @@ public class FilmDbStorageTest {
         filmStorage.deleteUserLike(film.getId(), user.getId());
         likes = filmStorage.getLikes(film.getId());
         assertEquals(0, likes.size());
+
     }
 
     private Film createDefaultFilm() {
@@ -108,6 +119,12 @@ public class FilmDbStorageTest {
         assertEquals(film1.getDescription(), film2.getDescription());
         assertEquals(film1.getDuration(), film2.getDuration());
         assertEquals(film1.getReleaseDate(), film2.getReleaseDate());
+    }
+
+    private FilmStorage newFilmStorage() {
+        GenreStorage genreStorage = new GenreDbStorage(jdbcTemplate);
+        MpaStorage mpaStorage = new MpaDbStorage(jdbcTemplate);
+        return new FilmDbStorage(jdbcTemplate, genreStorage, mpaStorage);
     }
 
 }

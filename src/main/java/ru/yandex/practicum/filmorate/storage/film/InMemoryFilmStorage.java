@@ -1,14 +1,13 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@Component("memFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
 
     private Long lastId = 0L;
@@ -62,6 +61,11 @@ public class InMemoryFilmStorage implements FilmStorage {
                         .sorted((f1, f2) -> Integer.compare(f2.getUserLikes().size(), f1.getUserLikes().size()))
                         .limit(count)
                         .collect(Collectors.toList());
+    }
+
+    @Override
+    public Set<Long> getLikes(Long filmId) {
+        return null;
     }
 
 }

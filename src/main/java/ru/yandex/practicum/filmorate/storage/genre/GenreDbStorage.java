@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Component("dbGenreStorage")
 @Primary
 @Slf4j
 @RequiredArgsConstructor
@@ -44,6 +44,23 @@ public class GenreDbStorage implements GenreStorage {
         }
 
         return genreFromRowSet(genreRows);
+    }
+
+    @Override
+    public List<Genre> getFilmGenres(Long filmId) {
+        List<Genre> genres = new ArrayList<>();
+
+        SqlRowSet genresRows = jdbcTemplate.queryForRowSet(
+                "SELECT genre.* \n" +
+                        "FROM film_genre \n" +
+                        "INNER JOIN genre ON film_genre.genre_id = genre.id \n" +
+                        "WHERE film_genre.film_id = ?", filmId);
+
+        while (genresRows.next()) {
+            genres.add(genreFromRowSet(genresRows));
+        }
+
+        return genres;
     }
 
     private Genre genreFromRowSet(SqlRowSet genreRow) {
