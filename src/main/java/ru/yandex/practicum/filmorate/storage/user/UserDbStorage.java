@@ -27,12 +27,13 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getUsersList() {
         List<User> users = new ArrayList<>();
+        Map<Long, Set<Long>> userFriendList = getUserFriendList(0L);
 
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM `user` ");
 
         while (userRows.next()) {
-            users.add(userFromRowSet(userRows));
+            users.add(userFromRowSet(userRows, userFriendList));
         }
 
         return users;
@@ -82,6 +83,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User getUser(Long id) {
+        Map<Long, Set<Long>> userFriendList = getUserFriendList(id);
+
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM `user` WHERE id = ?", id);
 
@@ -90,7 +93,7 @@ public class UserDbStorage implements UserStorage {
             return null;
         }
 
-        return userFromRowSet(userRows);
+        return userFromRowSet(userRows, userFriendList);
     }
 
     @Override
@@ -114,6 +117,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getFriends(Long userId) {
         List<User> friends = new ArrayList<>();
+        Map<Long, Set<Long>> userFriendList = getUserFriendList(0L);
 
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(
                 "SELECT u.* " +
@@ -124,7 +128,7 @@ public class UserDbStorage implements UserStorage {
                 userId);
 
         while (userRows.next()) {
-            friends.add(userFromRowSet(userRows));
+            friends.add(userFromRowSet(userRows, userFriendList));
         }
 
         return friends;
@@ -133,6 +137,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getCommonFriends(Long userId, Long otherId) {
         List<User> friends = new ArrayList<>();
+        Map<Long, Set<Long>> userFriendList = getUserFriendList(0L);
 
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(
                 "SELECT u.* " +
@@ -145,13 +150,34 @@ public class UserDbStorage implements UserStorage {
                 userId, otherId);
 
         while (userRows.next()) {
-            friends.add(userFromRowSet(userRows));
+            friends.add(userFromRowSet(userRows, userFriendList));
         }
 
         return friends;
     }
 
-    private User userFromRowSet(SqlRowSet userRows) {
+    private Map<Long, Set<Long>> getUserFriendList(Long userId) {
+        Map<Long, Set<Long>> friendList = new HashMap<>();
+
+        StringBuilder cmd = new StringBuilder("SELECT * FROM friends ");
+        if (userId != 0) {
+            cmd.append("WHERE user_id = ").append(userId);
+        }
+
+        SqlRowSet friendsRows = jdbcTemplate.queryForRowSet(cmd.toString());
+        while (friendsRows.next()) {
+            userId = friendsRows.getLong("user_id");
+            if (!friendList.containsKey(userId)) {
+                friendList.put(userId, new HashSet<>());
+            }
+            friendList.get(userId).add(friendsRows.getLong("friend_id"));
+        }
+
+        return friendList;
+    }
+
+
+    private User userFromRowSet(SqlRowSet userRows, Map<Long, Set<Long>> userFriendList) {
         User user = new User();
 
         user.setId(userRows.getLong("id"));

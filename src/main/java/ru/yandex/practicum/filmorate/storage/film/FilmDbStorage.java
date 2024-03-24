@@ -38,12 +38,16 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> getFilmsList() {
         List<Film> films = new ArrayList<>();
+        Map<Long, List<Genre>> filmGenres = genreStorage.getCommonFilmGenres(0L);
 
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(
-                "SELECT * FROM film");
+                "SELECT film.*, rating.name as mpa_name \n" +
+                        "FROM film \n" +
+                        "  LEFT JOIN rating on film.rating_id = rating.id \n"
+                );
 
         while (filmRows.next()) {
-            films.add(filmFromRowSet(filmRows));
+            films.add(filmFromRowSet(filmRows, filmGenres));
         }
 
         return films;
@@ -113,15 +117,21 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film getFilm(Long id) {
+        Map<Long, List<Genre>> filmGenres = genreStorage.getCommonFilmGenres(id);
+
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(
-                "SELECT * FROM film WHERE id = ?", id);
+                "SELECT film.*, rating.name as mpa_name \n" +
+                        "FROM film \n" +
+                        "  LEFT JOIN rating on film.rating_id = rating.id \n" +
+                        "WHERE film.id = ?",
+                id);
 
         if (!filmRows.next()) {
             log.info("Фильм с указанным ID {} не найден в базе данных", id);
             return null;
         }
 
-        return filmFromRowSet(filmRows);
+        return filmFromRowSet(filmRows, filmGenres);
     }
 
     @Override
@@ -152,17 +162,19 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> getPopular(Integer count) {
         List<Film> films = new ArrayList<>();
+        Map<Long, List<Genre>> filmGenres = genreStorage.getCommonFilmGenres(0L);
 
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(
                 "SELECT \n" +
-                        "  film.*, \n" +
+                        "  film.*, rating.name as mpa_name, \n" +
                         "  (SELECT count(*) FROM user_film WHERE film.id = user_film.film_id) AS count_likes \n" +
                         "FROM film \n" +
+                        "  LEFT JOIN rating on film.rating_id = rating.id \n" +
                         "ORDER BY count_likes DESC, film.name \n" +
                         "LIMIT " + count);
 
         while (filmRows.next()) {
-            films.add(filmFromRowSet(filmRows));
+            films.add(filmFromRowSet(filmRows, filmGenres));
         }
 
         return films;
@@ -184,15 +196,24 @@ public class FilmDbStorage implements FilmStorage {
         return likes;
     }
 
-    private Film filmFromRowSet(SqlRowSet filmRow) {
+    private Film filmFromRowSet(SqlRowSet filmRow, Map<Long, List<Genre>> filmGenres) {
         Film film = new Film();
         film.setId(filmRow.getLong("id"));
         film.setName(filmRow.getString("name"));
         film.setDescription(filmRow.getString("description"));
         film.setReleaseDate(Objects.requireNonNull(filmRow.getDate("release_date")).toLocalDate());
         film.setDuration(filmRow.getInt("duration"));
-        film.setGenres(genreStorage.getFilmGenres(film.getId()));
-        film.setMpa(mpaStorage.getMpa(filmRow.getInt("rating_id")));
+
+        if (filmGenres.containsKey(film.getId())) {
+            film.setGenres(filmGenres.get(film.getId()));
+        }
+
+        int mpaId = filmRow.getInt("rating_id");
+        if (mpaId != 0) {
+            film.getMpa().setId(mpaId);
+            film.getMpa().setName(filmRow.getString("MPA_NAME"));
+        }
+
         return film;
     }
 

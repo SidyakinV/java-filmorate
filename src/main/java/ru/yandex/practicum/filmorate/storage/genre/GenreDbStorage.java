@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component("dbGenreStorage")
 @Primary
@@ -61,6 +63,36 @@ public class GenreDbStorage implements GenreStorage {
         }
 
         return genres;
+    }
+
+    @Override
+    public Map<Long, List<Genre>> getCommonFilmGenres(Long filmId) {
+        Map<Long, List<Genre>> filmGenres = new HashMap<>();
+
+        StringBuilder cmd = new StringBuilder(
+                "SELECT film_genre.film_id, genre.* \n" +
+                        "FROM film_genre \n" +
+                        "  INNER JOIN genre ON film_genre.genre_id = genre.id \n"
+        );
+        if (filmId != 0) {
+            cmd.append("WHERE film_genre.film_id = ").append(filmId);
+        }
+
+        SqlRowSet genresRows = jdbcTemplate.queryForRowSet(cmd.toString());
+        while (genresRows.next()) {
+            Long id = genresRows.getLong("film_id");
+
+            if (!filmGenres.containsKey(id)) {
+                filmGenres.put(id, new ArrayList<>());
+            }
+
+            Genre genre = new Genre();
+            genre.setId(genresRows.getInt("id"));
+            genre.setName(genresRows.getString("name"));
+            filmGenres.get(id).add(genre);
+        }
+
+        return filmGenres;
     }
 
     private Genre genreFromRowSet(SqlRowSet genreRow) {
