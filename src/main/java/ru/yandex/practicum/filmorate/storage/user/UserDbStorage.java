@@ -186,11 +186,8 @@ public class UserDbStorage implements UserStorage {
         user.setName(userRows.getString("name"));
         user.setBirthday(Objects.requireNonNull(userRows.getDate("birthday")).toLocalDate());
 
-        SqlRowSet friendsRows = jdbcTemplate.queryForRowSet(
-                "SELECT friend_id FROM friends WHERE user_id = ?", user.getId());
-
-        while (friendsRows.next()) {
-            user.getFriends().add(friendsRows.getLong("friend_id"));
+        if (userFriendList.containsKey(user.getId())) {
+            user.setFriends(userFriendList.get(user.getId()));
         }
 
         return user;
