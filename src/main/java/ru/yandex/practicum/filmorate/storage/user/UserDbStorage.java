@@ -6,7 +6,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.PreparedStatement;
@@ -63,7 +62,7 @@ public class UserDbStorage implements UserStorage {
     // Здесь мы обновляем только информацию о пользователе. Его друзей не трогаем, т.к. для этих целей
     // у нас есть методы addFriend/removeFriend
     @Override
-    public User updateUser(User user) throws NotFoundException {
+    public User updateUser(User user) {
         String sqlQuery =
                 "update `user` set " +
                         "  login = ?, name = ?, email = ?, birthday = ? " +
@@ -75,13 +74,7 @@ public class UserDbStorage implements UserStorage {
                 user.getBirthday().format(dateTimeFormatter),
                 user.getId());
 
-        Long id = user.getId();
-        User dbUser = getUser(id);
-        if (dbUser == null) {
-            throw new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", id));
-        }
-
-        return dbUser;
+        return getUser(user.getId());
     }
 
     @Override

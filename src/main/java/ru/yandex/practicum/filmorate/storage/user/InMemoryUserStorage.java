@@ -30,9 +30,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User updateUser(User user) throws NotFoundException {
+    public User updateUser(User user) {
         if (!usersList.containsKey(user.getId())) {
-            throw new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", user.getId()));
+            return null;
         }
 
         usersList.put(user.getId(), user);

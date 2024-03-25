@@ -42,7 +42,12 @@ public class UserService {
     public User updateUser(User user) throws ValidationException, NotFoundException {
         log.debug("Запрос на изменение пользователя: {}", user);
         validate(user);
-        return userStorage.updateUser(user);
+        User dbUser = userStorage.updateUser(user);
+        if (dbUser == null) {
+            log.info("Пользователь с указанным ID {} не найден", user.getId());
+            throw new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", user.getId()));
+        }
+        return dbUser;
     }
 
     public User getUser(Long id) throws NotFoundException {

@@ -69,12 +69,11 @@ public class UsersManagersTest {
         user.setEmail("pupkin@email.com");
         user.setBirthday(LocalDate.of(1999, 12, 31));
 
-        User updUser;
-        try {
-            updUser = userStorage.updateUser(user);
-        } catch (NotFoundException e) {
-            throw new RuntimeException(e.getMessage());
+        User updUser = userStorage.updateUser(user);
+        if (updUser == null) {
+            throw new RuntimeException("Пользователь не найден");
         }
+
         checkEqualsUsers(user, updUser);
 
         User savedUser = getUser(userId);
