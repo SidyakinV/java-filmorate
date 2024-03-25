@@ -26,7 +26,7 @@ public class FilmDbStorageTest {
     private final JdbcTemplate jdbcTemplate;
 
     @Test
-    public void addFilmTest() throws ValidationException {
+    public void addFilmTest() {
         FilmStorage filmStorage = newFilmStorage();
 
         Film newFilm = createDefaultFilm();
@@ -39,7 +39,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
-    public void updateFilmTest() throws ValidationException, NotFoundException {
+    public void updateFilmTest() {
         FilmStorage filmStorage = newFilmStorage();
 
         Film newFilm = createDefaultFilm();
@@ -57,7 +57,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
-    public void addLikeTest() throws ValidationException, NotFoundException {
+    public void addLikeTest() throws ValidationException {
 
         FilmStorage filmStorage = newFilmStorage();
         UserStorage userStorage = new UserDbStorage(jdbcTemplate);
@@ -77,7 +77,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
-    public void removeLikeTest() throws ValidationException, NotFoundException {
+    public void removeLikeTest() throws ValidationException {
 
         FilmStorage filmStorage = newFilmStorage();
         UserStorage userStorage = new UserDbStorage(jdbcTemplate);

@@ -73,7 +73,7 @@ public class FilmService {
         return filmStorage.getFilmsList();
     }
 
-    public void addUserLike(Long filmId, Long userId) throws NotFoundException, ValidationException {
+    public void addUserLike(Long filmId, Long userId) throws ValidationException {
         log.debug("Запрос на установку лайка фильму: filmId={}, userId={}", filmId, userId);
         if (filmStorage.getFilm(filmId) == null) {
             log.info("Фильм с указанным ID {} не найден в базе данных", filmId);
@@ -86,7 +86,7 @@ public class FilmService {
         filmStorage.addUserLike(filmId, userId);
     }
 
-    public void deleteUserLike(Long filmId, Long userId) throws NotFoundException, ValidationException {
+    public void deleteUserLike(Long filmId, Long userId) throws ValidationException {
         log.debug("Запрос на снятие лайка фильму: filmId={}, userId={}", filmId, userId);
         if (filmStorage.getFilm(filmId) == null) {
             log.info("Фильм с указанным ID {} не найден в базе данных", filmId);
