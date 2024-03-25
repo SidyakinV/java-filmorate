@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
@@ -56,7 +55,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
-    public void addLikeTest() throws ValidationException {
+    public void addLikeTest() {
 
         FilmStorage filmStorage = newFilmStorage();
         UserStorage userStorage = new UserDbStorage(jdbcTemplate);
@@ -76,7 +75,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
-    public void removeLikeTest() throws ValidationException {
+    public void removeLikeTest() {
 
         FilmStorage filmStorage = newFilmStorage();
         UserStorage userStorage = new UserDbStorage(jdbcTemplate);

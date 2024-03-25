@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
@@ -36,7 +35,7 @@ class UserDbStorageTest {
     }
 
     @Test
-    public void updateUserTest() throws NotFoundException {
+    public void updateUserTest() {
         User newUser = createDefaultUser();
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User user = userStorage.addUser(newUser);
