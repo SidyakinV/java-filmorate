@@ -11,10 +11,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.genre.GenreDbStorage;
-import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
-import ru.yandex.practicum.filmorate.storage.mpa.MpaDbStorage;
-import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -122,9 +118,7 @@ public class FilmDbStorageTest {
     }
 
     private FilmStorage newFilmStorage() {
-        GenreStorage genreStorage = new GenreDbStorage(jdbcTemplate);
-        MpaStorage mpaStorage = new MpaDbStorage(jdbcTemplate);
-        return new FilmDbStorage(jdbcTemplate, genreStorage, mpaStorage);
+        return new FilmDbStorage(jdbcTemplate);
     }
 
 }

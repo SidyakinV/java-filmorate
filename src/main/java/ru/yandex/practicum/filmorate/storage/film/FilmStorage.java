@@ -11,15 +11,15 @@ public interface FilmStorage {
 
     List<Film> getFilmsList();
 
-    Film addFilm(Film film) throws ValidationException;
+    Film addFilm(Film film);
 
-    Film updateFilm(Film film) throws NotFoundException, ValidationException;
+    Film updateFilm(Film film);
 
     Film getFilm(Long id);
 
-    void addUserLike(Long filmId, Long userId) throws NotFoundException, ValidationException;
+    void addUserLike(Long filmId, Long userId);
 
-    void deleteUserLike(Long filmId, Long userId) throws NotFoundException, ValidationException;
+    void deleteUserLike(Long filmId, Long userId);
 
     List<Film> getPopular(Integer count);
 

@@ -26,11 +26,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film updateFilm(Film film) throws NotFoundException {
+    public Film updateFilm(Film film) {
         if (!filmsList.containsKey(film.getId())) {
-            throw new NotFoundException(String.format("Фильм с указанным ID (%d) не найден", film.getId()));
+            return null;
         }
-
         filmsList.put(film.getId(), film);
         return film;
     }
@@ -41,14 +40,14 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void addUserLike(Long filmId, Long userId) throws NotFoundException {
+    public void addUserLike(Long filmId, Long userId) {
         Film film = getFilm(filmId);
         film.getUserLikes().add(userId);
         updateFilm(film);
     }
 
     @Override
-    public void deleteUserLike(Long filmId, Long userId) throws NotFoundException {
+    public void deleteUserLike(Long filmId, Long userId) {
         Film film = getFilm(filmId);
         film.getUserLikes().remove(userId);
         updateFilm(film);

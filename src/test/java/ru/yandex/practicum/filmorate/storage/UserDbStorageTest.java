@@ -80,7 +80,7 @@ class UserDbStorageTest {
         assertEquals(0, userStorage.getFriends(user1.getId()).size());
         assertEquals(1, userStorage.getFriends(user2.getId()).size());
 
-        userStorage.deleteFriend(user2.getId(), user1.getId());
+        userStorage.removeFriend(user2.getId(), user1.getId());
 
         assertEquals(0, userStorage.getFriends(user1.getId()).size());
         assertEquals(0, userStorage.getFriends(user2.getId()).size());

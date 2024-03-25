@@ -65,7 +65,7 @@ public class UserService {
 
     public void deleteFriend(Long userId, Long friendId)  {
         log.debug("Запрос на удаление из друзей: userId={}, friendId={}", userId, friendId);
-        userStorage.deleteFriend(userId, friendId);
+        userStorage.removeFriend(userId, friendId);
     }
 
     public List<User> getFriends(Long userId) {

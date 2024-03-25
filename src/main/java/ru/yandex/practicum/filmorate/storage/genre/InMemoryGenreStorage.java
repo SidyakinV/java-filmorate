@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
-import java.util.Map;
 
 @Component("memGenreStorage")
 public class InMemoryGenreStorage implements GenreStorage {
@@ -16,16 +15,6 @@ public class InMemoryGenreStorage implements GenreStorage {
 
     @Override
     public Genre getGenre(Integer id) {
-        return null;
-    }
-
-    @Override
-    public List<Genre> getFilmGenres(Long filmId) {
-        return null;
-    }
-
-    @Override
-    public Map<Long, List<Genre>> getCommonFilmGenres(Long filmId) {
         return null;
     }
 

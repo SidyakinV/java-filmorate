@@ -67,11 +67,9 @@ public class FilmStorageTests {
         film.setDuration(100);
         film.setReleaseDate(LocalDate.of(2024, 1, 1));
 
-        Film updFilm;
-        try {
-            updFilm = filmStorage.updateFilm(film);
-        } catch (NotFoundException e) {
-            throw new RuntimeException("Ошибка при изменении фильма: " + e.getMessage());
+        Film updFilm = filmStorage.updateFilm(film);
+        if (updFilm == null) {
+            throw new RuntimeException("Фильм не найден!");
         }
         checkEqualsFilms(film, updFilm);
 
