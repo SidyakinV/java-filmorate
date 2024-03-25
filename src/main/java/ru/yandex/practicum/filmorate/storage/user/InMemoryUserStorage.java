@@ -1,15 +1,11 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Component
+@Component("memUserStorage")
 public class InMemoryUserStorage implements UserStorage {
 
     private Long lastId;
@@ -33,9 +29,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User updateUser(User user) throws NotFoundException {
+    public User updateUser(User user) {
         if (!usersList.containsKey(user.getId())) {
-            throw new NotFoundException(String.format("Пользователь с указанным ID (%d) не найден", user.getId()));
+            return null;
         }
 
         usersList.put(user.getId(), user);
@@ -45,6 +41,45 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User getUser(Long id) {
         return usersList.get(id);
+    }
+
+    @Override
+    public void addFriend(Long userId, Long friendId) {
+        User user = getUser(userId);
+        User friend = getUser(friendId);
+        user.getFriends().add(friendId);
+        friend.getFriends().add(userId);
+    }
+
+    @Override
+    public void removeFriend(Long userId, Long friendId) {
+        User user = getUser(userId);
+        User friend = getUser(friendId);
+        user.getFriends().remove(friendId);
+        friend.getFriends().remove(userId);
+    }
+
+    @Override
+    public List<User> getFriends(Long userId) {
+        User user = getUser(userId);
+        List<User> users = new ArrayList<>();
+        for (Long id : user.getFriends()) {
+            users.add(getUser(id));
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> getCommonFriends(Long userId, Long otherId) {
+        Set<Long> friends1 = getUser(userId).getFriends();
+        Set<Long> friends2 = getUser(otherId).getFriends();
+        List<User> list = new ArrayList<>();
+        for (Long id : friends1) {
+            if (friends2.contains(id)) {
+                list.add(getUser(id));
+            }
+        }
+        return list;
     }
 
 }
